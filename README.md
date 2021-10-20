@@ -3,4 +3,4 @@
 
 # dependencies
  [gcem](https://github.com/kthohr/gcem) - mathematical operations at compile-time  
- *optional*[fmt](https://github.com/fmtlib/fmt/) - integrates with fmt's formatter to make logging prim_wrapper types behave the same as their primitive counterpart
+ *optional* [fmt](https://github.com/fmtlib/fmt/) - integrates with fmt's formatter to make logging prim_wrapper types behave the same as their primitive counterpart
