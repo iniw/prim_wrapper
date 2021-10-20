@@ -10,13 +10,13 @@
  you want to know the size of a type? `type::BYTES` or `type::BITS`; invert it's endianess? `foo.byte_swap()`; get it's contents as a string? `foo.str()`; or maybe build a it from a string: `type::from_str()`.
 
 # features
- ###### compile-time static members
+ - compile-time static members
     - MIN, MAX: minimum and maximum value
     - EPSILON: epsilon value
     - RADIX: radix value
     - BYTES: the type's size, in bytes
     - BITS: the type's size, in bits
-###### static functions (T = primitive value, PW = prim_wrapper value)
+- static functions (T = primitive value, PW = prim_wrapper value)
     - **to_str(T)**: converts value of the specified type to a string
     - **from_str(str)**: builds a PW from a string
     - **_integral only_ to_bytes(PW)**: converts the value's byte structure to a PW::byte_set (std::array)
