@@ -231,6 +231,7 @@ struct fmt::formatter<prim_wrapper<T>> : fmt::formatter<T> {
 template<std::floating_point T>
 struct float_wrapper : prim_wrapper<T> {
 private:
+
     using FW = float_wrapper<T>;
     using FWR = float_wrapper<T>&;
     using CFWR = const float_wrapper<T>&;
