@@ -208,15 +208,15 @@ public:
         return gcem::abs(m_val);
     }
 
-    constexpr PW byte_swap() const requires unsigned_integral<T> {
+    constexpr PW byte_swap() const requires concepts::unsigned_integral<T> {
         return detail::bswap(m_val);
     }
 
-    constexpr PW rotate_left(std::uint32_t v) const requires unsigned_integral<T> {
+    constexpr PW rotate_left(std::uint32_t v) const requires concepts::unsigned_integral<T> {
         return std::rotl(m_val, v);
     }
 
-    constexpr PW rotate_right(std::uint32_t v) const requires unsigned_integral<T> {
+    constexpr PW rotate_right(std::uint32_t v) const requires concepts::unsigned_integral<T> {
         return std::rotr(m_val, v);
     }
 };
