@@ -149,7 +149,7 @@ public:
         return fmt::to_string(v);
     }
 
-    constexpr static byte_set to_bytes(CPWR pw) noexcept {
+    constexpr static byte_set to_bytes(CPWR pw) noexcept requires std::integral_v<T> {
         byte_set out{};
         
         for (int i = 0; i < BYTES; i++)
@@ -162,7 +162,7 @@ public:
         return fmt::to_string(m_val);
     }
 
-    constexpr byte_set bytes() const noexcept {
+    constexpr byte_set bytes() const noexcept requires std::integral_v<T> {
         byte_set out{};
 
         for (int i = 0; i < BYTES; i++)
@@ -179,7 +179,7 @@ public:
         return out;
     }
 
-    constexpr static PW from_bytes(const byte_set& bytes) noexcept {
+    constexpr static PW from_bytes(const byte_set& bytes) noexcept requires std::integral_v<T> {
         T out = 0;
 
         for (auto byte: bytes) {
