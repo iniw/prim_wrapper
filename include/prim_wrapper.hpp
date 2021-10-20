@@ -1,12 +1,14 @@
 #pragma once
 
-template<typename T>
-concept number = (std::is_integral_v<T> || std::is_floating_point_v<T>) && std::is_fundamental_v<T> && !std::is_same_v<bool, T>;
+namespace concepts {
+    template<typename T>
+    concept number = (std::is_integral_v<T> || std::is_floating_point_v<T>) && !std::is_same_v<bool, T>;
 
-template<typename T>
-concept unsigned_integral = std::is_integral_v<T> && std::is_unsigned_v<T> && std::is_fundamental_v<T> && !std::is_same_v<bool, T>;
+    template<typename T>
+    concept unsigned_integral = std::is_integral_v<T> && std::is_unsigned_v<T> && !std::is_same_v<bool, T>;
+}
 
-template<number T>
+template<concepts::number T>
 struct prim_wrapper {
 private:
 
@@ -19,14 +21,16 @@ private:
     struct detail {
     private:
 
-        template<unsigned_integral T, std::size_t... N>
+        // credits to: https://stackoverflow.com/a/36937049
+
+        template<concepts::unsigned_integral T, std::size_t... N>
         constexpr static T bswap_impl(T v, std::index_sequence<N...>) {
             return ((((v >> (N * CHAR_BIT)) & (T)(std::uint8_t)(-1)) << ((sizeof(T) - 1 - N) * CHAR_BIT)) | ...);
         };
 
     public:
 
-        template<unsigned_integral T>
+        template<concepts::unsigned_integral T>
         constexpr static T bswap(T v) {
             return bswap_impl(v, std::make_index_sequence<sizeof(T)>{});
         }
@@ -49,7 +53,7 @@ public:
     constexpr prim_wrapper() noexcept : m_val{} {}
     constexpr prim_wrapper(CTR v) noexcept : m_val{v} {}
 
-    template<number U>
+    template<concepts::number U>
     constexpr prim_wrapper(const prim_wrapper<U>& pw) noexcept : m_val{static_cast<T>(pw.get())} {}
 
     /* operators */
@@ -217,7 +221,7 @@ public:
     }
 };
 
-template<number T>
+template<concepts::number T>
 struct fmt::formatter<prim_wrapper<T>> : fmt::formatter<T> {
     auto format(const prim_wrapper<T>& val, format_context& ctx) {
         return formatter<T>::format(val.m_val, ctx);

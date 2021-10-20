@@ -1,5 +1,6 @@
 #include "prim_wrapper.hpp"
 
+// should probably write some real test cases huh
 int main()
 {
     constexpr u32 from_bytes = u32::from_bytes({0x32, 0x33, 0x12, 0x32});
