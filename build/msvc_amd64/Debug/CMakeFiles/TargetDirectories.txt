@@ -1,0 +1,3 @@
+D:/Projetos/prim_wrapper/build/msvc_amd64/Debug/CMakeFiles/prim_wrapper.dir
+D:/Projetos/prim_wrapper/build/msvc_amd64/Debug/CMakeFiles/ALL_BUILD.dir
+D:/Projetos/prim_wrapper/build/msvc_amd64/Debug/CMakeFiles/ZERO_CHECK.dir

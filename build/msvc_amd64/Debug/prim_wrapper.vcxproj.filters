@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Projetos\prim_wrapper\build\msvc_amd64\Debug\CMakeFiles\prim_wrapper.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projetos\prim_wrapper\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Projetos\prim_wrapper\include\prim_wrapper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projetos\prim_wrapper\build\msvc_amd64\Debug\CMakeFiles\prim_wrapper.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projetos\prim_wrapper\build\msvc_amd64\Debug\CMakeFiles\prim_wrapper.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projetos\prim_wrapper\build\msvc_amd64\Debug\CMakeFiles\prim_wrapper.dir\MinSizeRel\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projetos\prim_wrapper\build\msvc_amd64\Debug\CMakeFiles\prim_wrapper.dir\RelWithDebInfo\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projetos\prim_wrapper\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{7F600EDC-17EB-391E-B258-9FFF959C45ED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{246D8C35-5018-31E5-99A1-F74503DE9D6A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{D1BA33F8-3A7A-3F0F-B227-DEE7C75BD920}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
