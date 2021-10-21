@@ -16,6 +16,7 @@ set(LOCAL_PROJECT_NAME "prim_wrapper")
 
 # Header files
 set(HEADERS
+    include/arithmetic_traits.hpp
     include/prim_wrapper.hpp
 )
 
