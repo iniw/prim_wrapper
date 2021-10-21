@@ -58,10 +58,13 @@ PW_FORCEINLINE constexpr bool operator op (CPWR<T> pw) const noexcept { return m
 template<concepts::number T>
 struct prim_wrapper {
 private:
+
     template<concepts::number U>
     using PW = prim_wrapper<U>;
+
     template<concepts::number U>
     using PWR = prim_wrapper<U>&;
+
     template<concepts::number U>
     using CPWR = const prim_wrapper<U>&;
 
@@ -328,20 +331,25 @@ public:
 };
 
 /* signed integers */
+
 using i8 = prim_wrapper<std::int8_t>;
 using i16 = prim_wrapper<std::int16_t>;
 using i32 = prim_wrapper<std::int32_t>;
 using i64 = prim_wrapper<std::int64_t>;
 
 /* unsigned integers */
+
 using u8 = prim_wrapper<std::uint8_t>;
 using u16 = prim_wrapper<std::uint16_t>;
 using u32 = prim_wrapper<std::uint32_t>;
 using u64 = prim_wrapper<std::uint64_t>;
 
 /* floats */
+
 using f32 = float_wrapper<float>;
 using f64 = float_wrapper<double>;
+
+/* goobye macros :( */
 
 #undef PW_FORCEINLINE
 

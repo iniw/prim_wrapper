@@ -65,11 +65,6 @@ TEST_CASE("f32 operators", "[f32]") {
     REQUIRE(test-- == 3.f);
     REQUIRE(--test == 1.f);
 
-    i32 a = 15;
-    u64 d = a;
-    //u64 b = 5;
-    auto c = d / 5;
-
     test = 0.f;
 
     REQUIRE(!test);
