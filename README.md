@@ -9,7 +9,7 @@
 
 # why?
  the point is to make writing and interfacing with numerical types more preditable and intuitive;  
- you want to know the size of a type? `type::BYTES or `type::BITS`; invert it's endianess? `foo.byte_swap()`; get it's contents as a string? `foo.str()`; or maybe build a it from a string: `type::from_str()`.
+ you want to know the size of a type? `type::BYTES` or `type::BITS`; invert it's endianess? `foo.byte_swap()`; get it's contents as a string? `foo.str()`; or maybe build a it from a string: `type::from_str()`.
 
 # usage
  include `prim_wrapper.hpp` in your project and use the type aliases:
@@ -49,7 +49,7 @@
  1. `a` gets constructed with 15
  2. `b` gets constructed via an implicit cast where 15 is promoted to a 64bit integer
  3. `a` gets promoted to a 64bit integer and `a + b` is evaluated as a 64 bit integer
- 4. the expression is implicitly casted down to a 32bit unsigned and stored in c  
+ 4. the expression is implicitly casted to a 32bit unsigned and stored in c  
 
  now take the following code:
 ```
@@ -58,4 +58,9 @@
  u32 c = a + b;
  ```
  the order of events is: 
- 
+ 1. same as the previous snippet
+ 2. same as the previous snippet
+ 3. `b` gets implicitly downgraded to a 32 bit integer and the expression is evaluated as a 32 bit integer
+ 4. same as the previous snippet
+
+ i'm planning to solve that soon.
