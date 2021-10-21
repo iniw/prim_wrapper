@@ -8,6 +8,10 @@ namespace concepts {
     concept unsigned_integral = std::is_integral_v<T> && std::is_unsigned_v<T> && !std::is_same_v<bool, T>;
 }
 
+#define FORCEINLINE __forceinline
+#define INTEGRAL_ONLY requires std::is_integral_v<T>
+#define UNSIGNED_INTEGRAL_ONLY requires concepts::unsigned_integral<T>
+
 template<concepts::number T>
 struct prim_wrapper {
 private:
@@ -15,7 +19,6 @@ private:
     using PW = prim_wrapper<T>;
     using PWR = prim_wrapper<T>&;
     using CPWR = const prim_wrapper<T>&;
-
     using CTR = const T&;
 
     struct detail {
@@ -24,14 +27,14 @@ private:
         // credits to: https://stackoverflow.com/a/36937049
 
         template<concepts::unsigned_integral T, std::size_t... N>
-        constexpr static T bswap_impl(T v, std::index_sequence<N...>) {
+        FORCEINLINE constexpr static T bswap_impl(T v, std::index_sequence<N...>) {
             return ((((v >> (N * CHAR_BIT)) & (T)(std::uint8_t)(-1)) << ((sizeof(T) - 1 - N) * CHAR_BIT)) | ...);
         };
 
     public:
 
         template<concepts::unsigned_integral T>
-        constexpr static T bswap(T v) {
+        FORCEINLINE constexpr static T bswap(T v) {
             return bswap_impl(v, std::make_index_sequence<sizeof(T)>{});
         }
     };
@@ -51,77 +54,94 @@ public:
     /* constructors */
 
     constexpr prim_wrapper() noexcept : m_val{} {}
-    constexpr prim_wrapper(CTR v) noexcept : m_val{v} {}
 
     template<concepts::number U>
-    constexpr prim_wrapper(const prim_wrapper<U>& pw) noexcept : m_val{static_cast<T>(pw.get())} {}
+    FORCEINLINE constexpr prim_wrapper(const U& v) noexcept : m_val{static_cast<T>(v)} {}
+
+    template<concepts::number U>
+    FORCEINLINE constexpr prim_wrapper(const prim_wrapper<U>& pw) noexcept : m_val{static_cast<T>(pw.get())} {}
 
     /* operators */
 
-    auto operator <=>(const PW&) const = default;
+    FORCEINLINE constexpr explicit operator bool() const { return m_val; };
 
-    constexpr PWR operator=(CTR v) { m_val = v; return *this; }
-    constexpr PWR operator=(CPWR pw) { m_val = pw.get(); return *this; }
+    FORCEINLINE constexpr bool operator==(CTR v) const { return m_val == v; }
+    FORCEINLINE constexpr bool operator==(CPWR pw) const { return m_val == pw.get(); }
+    FORCEINLINE constexpr bool operator!=(CTR v) const { return m_val != v; }
+    FORCEINLINE constexpr bool operator!=(CPWR pw) const { return m_val != pw.get(); }
+    FORCEINLINE constexpr bool operator>(CTR v) const { return m_val > v; }
+    FORCEINLINE constexpr bool operator>(CPWR pw) const { return m_val > pw.get(); }
+    FORCEINLINE constexpr bool operator>=(CTR v) const { return m_val >= v; }
+    FORCEINLINE constexpr bool operator>=(CPWR pw) const { return m_val >= pw.get(); }
+    FORCEINLINE constexpr bool operator<(CTR v) const { return m_val < v; }
+    FORCEINLINE constexpr bool operator<(CPWR pw) const { return m_val < pw.get(); }
+    FORCEINLINE constexpr bool operator<=(CTR v) const { return m_val <= v; }
+    FORCEINLINE constexpr bool operator<=(CPWR pw) const { return m_val <= pw.get(); }
 
-    constexpr PW operator+(CTR v) { return m_val + v; }
-    constexpr PW operator+(CPWR pw) const { return m_val + pw.get(); }
-    constexpr PWR operator+=(CTR v) { m_val += v; return *this; }
-    constexpr PWR operator+=(CPWR pw) { m_val += pw.get(); return *this; }
+    template<concepts::number U>
+    FORCEINLINE constexpr PWR operator=(const U& v) noexcept { m_val = static_cast<T>(v); return *this; }
+    template<concepts::number U>
+    FORCEINLINE constexpr PWR operator=(const prim_wrapper<U>& pw) noexcept { m_val = static_cast<T>(pw.get()); return *this; }
 
-    constexpr PW operator-(CTR v) { return m_val - v; }
-    constexpr PW operator-(CPWR pw) const { return m_val - pw.get(); }
-    constexpr PWR operator-=(CTR v) { m_val -= v; return *this; }
-    constexpr PWR operator-=(CPWR pw) { m_val -= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator+(CTR v) const { return m_val + v; }
+    FORCEINLINE constexpr PW operator+(CPWR pw) const { return m_val + pw.get(); }
+    FORCEINLINE constexpr PWR operator+=(CTR v) { m_val += v; return *this; }
+    FORCEINLINE constexpr PWR operator+=(CPWR pw) { m_val += pw.get(); return *this; }
 
-    constexpr PW operator*(CTR v) { return m_val * v; }
-    constexpr PW operator*(CPWR pw) const { return m_val * pw.get(); }
-    constexpr PWR operator*=(CTR v) { m_val *= v; return *this; }
-    constexpr PWR operator*=(CPWR pw) { m_val *= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator-(CTR v) const { return m_val - v; }
+    FORCEINLINE constexpr PW operator-(CPWR pw) const { return m_val - pw.get(); }
+    FORCEINLINE constexpr PWR operator-=(CTR v) { m_val -= v; return *this; }
+    FORCEINLINE constexpr PWR operator-=(CPWR pw) { m_val -= pw.get(); return *this; }
 
-    constexpr PW operator/(CTR v) { return m_val / v; }
-    constexpr PW operator/(CPWR pw) const { return m_val / pw.get(); }
-    constexpr PWR operator/=(CTR v) { m_val /= v; return *this; }
-    constexpr PWR operator/=(CPWR pw) { m_val /= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator*(CTR v) const { return m_val * v; }
+    FORCEINLINE constexpr PW operator*(CPWR pw) const { return m_val * pw.get(); }
+    FORCEINLINE constexpr PWR operator*=(CTR v) { m_val *= v; return *this; }
+    FORCEINLINE constexpr PWR operator*=(CPWR pw) { m_val *= pw.get(); return *this; }
 
-    constexpr PW operator%(CTR v) { return m_val % v; }
-    constexpr PW operator%(CPWR pw) const { return m_val % pw.get(); }
-    constexpr PWR operator%=(CTR v) { m_val %= v; return *this; }
-    constexpr PWR operator%=(CPWR pw) { m_val %= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator/(CTR v) const { return m_val / v; }
+    FORCEINLINE constexpr PW operator/(CPWR pw) const { return m_val / pw.get(); }
+    FORCEINLINE constexpr PWR operator/=(CTR v) { m_val /= v; return *this; }
+    FORCEINLINE constexpr PWR operator/=(CPWR pw) { m_val /= pw.get(); return *this; }
 
-    constexpr PW operator&(CTR v) { return m_val & v; }
-    constexpr PW operator&(CPWR pw) const { return m_val & pw.get(); }
-    constexpr PWR operator&=(CTR v) { m_val &= v; return *this; }
-    constexpr PWR operator&=(CPWR pw) { m_val &= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator%(CTR v) const INTEGRAL_ONLY { return m_val % v; }
+    FORCEINLINE constexpr PW operator%(CPWR pw) const INTEGRAL_ONLY { return m_val % pw.get(); }
+    FORCEINLINE constexpr PWR operator%=(CTR v) INTEGRAL_ONLY { m_val %= v; return *this; }
+    FORCEINLINE constexpr PWR operator%=(CPWR pw) INTEGRAL_ONLY { m_val %= pw.get(); return *this; }
 
-    constexpr PW operator|(CTR v) { return m_val | v; }
-    constexpr PW operator|(CPWR pw) const { return m_val | pw.get(); }
-    constexpr PWR operator|=(CTR v) { m_val |= v; return *this; }
-    constexpr PWR operator|=(CPWR pw) { m_val |= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator&(CTR v) const INTEGRAL_ONLY { return m_val & v; }
+    FORCEINLINE constexpr PW operator&(CPWR pw) const INTEGRAL_ONLY { return m_val & pw.get(); }
+    FORCEINLINE constexpr PWR operator&=(CTR v) INTEGRAL_ONLY { m_val &= v; return *this; }
+    FORCEINLINE constexpr PWR operator&=(CPWR pw) INTEGRAL_ONLY { m_val &= pw.get(); return *this; }
+
+    FORCEINLINE constexpr PW operator|(CTR v) const INTEGRAL_ONLY { return m_val | v; }
+    FORCEINLINE constexpr PW operator|(CPWR pw) const INTEGRAL_ONLY { return m_val | pw.get(); }
+    FORCEINLINE constexpr PWR operator|=(CTR v) INTEGRAL_ONLY { m_val |= v; return *this; }
+    FORCEINLINE constexpr PWR operator|=(CPWR pw) INTEGRAL_ONLY { m_val |= pw.get(); return *this; }
     
-    constexpr PW operator^(CTR v) { return m_val ^ v; }
-    constexpr PW operator^(CPWR pw) const { return m_val ^ pw.get(); }
-    constexpr PWR operator^=(CTR v) { m_val ^= v; return *this; }
-    constexpr PWR operator^=(CPWR pw) { m_val ^= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator^(CTR v) const INTEGRAL_ONLY { return m_val ^ v; }
+    FORCEINLINE constexpr PW operator^(CPWR pw) const INTEGRAL_ONLY { return m_val ^ pw.get(); }
+    FORCEINLINE constexpr PWR operator^=(CTR v) INTEGRAL_ONLY { m_val ^= v; return *this; }
+    FORCEINLINE constexpr PWR operator^=(CPWR pw) INTEGRAL_ONLY { m_val ^= pw.get(); return *this; }
 
-    constexpr PW operator<<(CTR v) { return m_val << v; }
-    constexpr PW operator<<(CPWR pw) const { return m_val << pw.get(); }
-    constexpr PWR operator<<=(CTR v) { m_val <<= v; return *this; }
-    constexpr PWR operator<<=(CPWR pw) { m_val <<= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator<<(CTR v) const INTEGRAL_ONLY { return m_val << v; }
+    FORCEINLINE constexpr PW operator<<(CPWR pw) const INTEGRAL_ONLY { return m_val << pw.get(); }
+    FORCEINLINE constexpr PWR operator<<=(CTR v) INTEGRAL_ONLY { m_val <<= v; return *this; }
+    FORCEINLINE constexpr PWR operator<<=(CPWR pw) INTEGRAL_ONLY { m_val <<= pw.get(); return *this; }
 
-    constexpr PW operator>>(CTR v) { return m_val >> v; }
-    constexpr PW operator>>(CPWR pw) const { return m_val >> pw.get(); }
-    constexpr PWR operator>>=(CTR v) { m_val >>= v; return *this; }
-    constexpr PWR operator>>=(CPWR pw) { m_val >>= pw.get(); return *this; }
+    FORCEINLINE constexpr PW operator>>(CTR v) const INTEGRAL_ONLY { return m_val >> v; }
+    FORCEINLINE constexpr PW operator>>(CPWR pw) const INTEGRAL_ONLY { return m_val >> pw.get(); }
+    FORCEINLINE constexpr PWR operator>>=(CTR v) INTEGRAL_ONLY { m_val >>= v; return *this; }
+    FORCEINLINE constexpr PWR operator>>=(CPWR pw) INTEGRAL_ONLY { m_val >>= pw.get(); return *this; }
 
-    constexpr PWR operator++() { m_val++; return *this; }
-    constexpr PWR operator--() { m_val--; return *this; }
-    constexpr PW operator++(int) { return m_val++; }
-    constexpr PW operator--(int) { return m_val--; }
+    FORCEINLINE constexpr PWR operator++() { ++m_val; return *this; }
+    FORCEINLINE constexpr PWR operator--() { --m_val; return *this; }
+    FORCEINLINE constexpr PW operator++(int) { return m_val++; }
+    FORCEINLINE constexpr PW operator--(int) { return m_val--; }
 
-    constexpr PW operator+() const { return +m_val; }
-    constexpr PW operator-() const { return -m_val; }
-    constexpr PW operator~() const { return ~m_val; }
-    constexpr bool operator!() const { return !m_val; }
+    FORCEINLINE constexpr PW operator+() const { return +m_val; }
+    FORCEINLINE constexpr PW operator-() const { return -m_val; }
+    FORCEINLINE constexpr PW operator~() const INTEGRAL_ONLY { return ~m_val; }
+    FORCEINLINE constexpr bool operator!() const { return !m_val; }
 
     /* constants */
 
@@ -135,37 +155,44 @@ public:
 
     /* getters */
 
-    constexpr T& get() noexcept {
+    FORCEINLINE constexpr T& get() noexcept {
         return m_val;
     }
 
-    constexpr const T& get() const noexcept {
+    FORCEINLINE constexpr const T& get() const noexcept {
         return m_val;
     }
 
     /* conversion stuff */
+
+    template<typename T>
+    constexpr T to() {
+        return static_cast<T>(m_val);
+    }
     
+    // change to std::to_string if u don't have fmt
     static std::string to_str(CTR v) noexcept {
         return fmt::to_string(v);
     }
 
-    constexpr static byte_set to_bytes(CPWR pw) noexcept requires std::integral_v<T> {
+    constexpr static byte_set to_bytes(CPWR pw) noexcept INTEGRAL_ONLY {
         byte_set out{};
         
-        for (int i = 0; i < BYTES; i++)
+        for (auto i = 0; i < BYTES; i++)
             out[i] = (pw.get() >> BITS - (i + 1) * CHAR_BIT) & 0xFF; 
 
         return out;
     }
-        
+    
+    // change to std::to_string if u don't have fmt
     std::string str() const noexcept {
         return fmt::to_string(m_val);
     }
 
-    constexpr byte_set bytes() const noexcept requires std::integral_v<T> {
+    constexpr byte_set bytes() const noexcept INTEGRAL_ONLY {
         byte_set out{};
 
-        for (int i = 0; i < BYTES; i++)
+        for (auto i = 0; i < BYTES; i++)
             out[i] = (m_val >> BITS - (i + 1) * CHAR_BIT) & 0xFF; 
 
         return out;
@@ -179,10 +206,10 @@ public:
         return out;
     }
 
-    constexpr static PW from_bytes(const byte_set& bytes) noexcept requires std::integral_v<T> {
+    constexpr static PW from_bytes(const byte_set& bytes) noexcept INTEGRAL_ONLY {
         T out = 0;
 
-        for (auto byte: bytes) {
+        for (const auto& byte: bytes) {
             out <<= CHAR_BIT;
             out |= byte;
         }
@@ -208,15 +235,15 @@ public:
         return gcem::abs(m_val);
     }
 
-    constexpr PW byte_swap() const requires concepts::unsigned_integral<T> {
+    constexpr PW byte_swap() const UNSIGNED_INTEGRAL_ONLY {
         return detail::bswap(m_val);
     }
 
-    constexpr PW rotate_left(std::uint32_t v) const requires concepts::unsigned_integral<T> {
+    constexpr PW rotate_left(std::uint32_t v) const UNSIGNED_INTEGRAL_ONLY {
         return std::rotl(m_val, v);
     }
 
-    constexpr PW rotate_right(std::uint32_t v) const requires concepts::unsigned_integral<T> {
+    constexpr PW rotate_right(std::uint32_t v) const UNSIGNED_INTEGRAL_ONLY {
         return std::rotr(m_val, v);
     }
 };
@@ -235,6 +262,7 @@ private:
     using FW = float_wrapper<T>;
     using FWR = float_wrapper<T>&;
     using CFWR = const float_wrapper<T>&;
+    using CTR = const T&;
 
 public:
 
@@ -258,6 +286,10 @@ public:
     };
 
     /* general */
+
+    constexpr FW mod(CTR v) const noexcept {
+        return gcem::fmod(this->m_val, v);
+    }
 
     constexpr FW ceil() const noexcept {
         return gcem::ceil(this->m_val);
@@ -283,6 +315,10 @@ public:
         return gcem::internal::is_inf(this->m_val);
     }
 };
+
+#undef FORCEINLINE
+#undef INTEGRAL_ONLY
+#undef UNSIGNED_INTEGRAL_ONLY
 
 template<std::floating_point T>
 struct fmt::formatter<float_wrapper<T>> : fmt::formatter<T> {

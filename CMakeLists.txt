@@ -14,19 +14,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Project variables
 set(LOCAL_PROJECT_NAME "prim_wrapper")
 
-# Header files (relative to "include" directory)
+# Header files
 set(HEADERS
-    prim_wrapper.hpp
+    include/prim_wrapper.hpp
 )
 
-# Source files (relative to "src" directory)
+# Source files
 set(SOURCES
     main.cpp
+    tests/benchmark.cpp
+    tests/asserts.cpp
 )
 
 # Compiler definitions
+# make sure to define only one of the tests
 set(DEFINES
-    NOMINNOMAX
+    #TESTS_BENCHMARK
+    TESTS_ASSERTS
 )
 
 # Compiler options
@@ -41,7 +45,7 @@ project(${LOCAL_PROJECT_NAME}
 add_executable(${LOCAL_PROJECT_NAME})
 
 target_precompile_headers(${LOCAL_PROJECT_NAME} PRIVATE
-<gcem/gcem.hpp>
+<gcem/include/gcem.hpp>
 <intrin.h>
 <stdlib.h>
 <assert.h>
@@ -61,21 +65,25 @@ target_precompile_headers(${LOCAL_PROJECT_NAME} PRIVATE
 <fmt/core.h>
 <fmt/format.h>
 <fmt/ranges.h>
-<fmt/chrono.h>)
-
-list(TRANSFORM HEADERS PREPEND "include/")
-list(TRANSFORM SOURCES PREPEND "src/")
+<fmt/chrono.h>
+)
 
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_sources(${LOCAL_PROJECT_NAME} PRIVATE ${SOURCES} ${HEADERS})
 target_compile_definitions(${LOCAL_PROJECT_NAME} PRIVATE ${DEFINES})
 target_compile_options(${LOCAL_PROJECT_NAME} PRIVATE ${OPTIONS})
 
-find_package(fmt CONFIG REQUIRED)
-target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE fmt::fmt)
-
 set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "bin")
 
 ####################
 #   Dependencies   #
 ####################
+
+find_package(fmt CONFIG REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE fmt::fmt)
+
+find_package(benchmark REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE benchmark::benchmark)
+
+find_package(Catch2 REQUIRED)
+target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE Catch2::Catch2)
