@@ -48,8 +48,6 @@ protected:
 public:
 
     using byte_set = std::array<std::uint8_t, sizeof(T)>;
-
-    friend struct fmt::formatter<PW>;
         
     /* constructors */
 
@@ -172,7 +170,7 @@ public:
     
     // change to std::to_string if u don't have fmt
     static std::string to_str(CTR v) noexcept {
-        return fmt::to_string(v);
+        return std::to_string(v);
     }
 
     constexpr static byte_set to_bytes(CPWR pw) noexcept INTEGRAL_ONLY {
@@ -186,7 +184,7 @@ public:
     
     // change to std::to_string if u don't have fmt
     std::string str() const noexcept {
-        return fmt::to_string(m_val);
+        return std::to_string(m_val);
     }
 
     constexpr byte_set bytes() const noexcept INTEGRAL_ONLY {
@@ -248,13 +246,6 @@ public:
     }
 };
 
-template<concepts::number T>
-struct fmt::formatter<prim_wrapper<T>> : fmt::formatter<T> {
-    auto format(const prim_wrapper<T>& val, format_context& ctx) {
-        return formatter<T>::format(val.m_val, ctx);
-    }
-};
-
 template<std::floating_point T>
 struct float_wrapper : prim_wrapper<T> {
 private:
@@ -268,8 +259,6 @@ public:
 
     // inherit all the constructors
     using prim_wrapper<T>::prim_wrapper;
-
-    friend struct fmt::formatter<FW>;
 
     /* constants */
 
@@ -316,17 +305,6 @@ public:
     }
 };
 
-#undef FORCEINLINE
-#undef INTEGRAL_ONLY
-#undef UNSIGNED_INTEGRAL_ONLY
-
-template<std::floating_point T>
-struct fmt::formatter<float_wrapper<T>> : fmt::formatter<T> {
-    auto format(const float_wrapper<T>& val, format_context& ctx) {
-        return formatter<T>::format(val.m_val, ctx);
-    }
-};
-
 /* signed integers */
 using i8 = prim_wrapper<std::int8_t>;
 using i16 = prim_wrapper<std::int16_t>;
@@ -342,3 +320,7 @@ using u64 = prim_wrapper<std::uint64_t>;
 /* floats */
 using f32 = float_wrapper<float>;
 using f64 = float_wrapper<double>;
+
+#undef FORCEINLINE
+#undef INTEGRAL_ONLY
+#undef UNSIGNED_INTEGRAL_ONLY

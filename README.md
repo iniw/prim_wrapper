@@ -2,8 +2,10 @@
  lightweight, compile-time and rust-like wrapper around the primitive numerical c++ data types
 
 # dependencies
- [gcem](https://github.com/kthohr/gcem) - mathematical operations at compile-time  
- *optional* [fmt](https://github.com/fmtlib/fmt/) - integrates with fmt's formatter to make logging prim_wrapper types behave the same as their primitive counterpart
+ [gcem](https://github.com/kthohr/gcem) - provides math functions at compile-time  
+ *optional* [benchmark](https://github.com/google/benchmark) - required only if you want to run the benchmarks
+ *optional* [Catch2](https://github.com/catchorg/Catch2) - required only if you want to run the automated tests
+
 
 # why?
  the point is to make writing and interfacing with numerical types more preditable and intuitive;
@@ -11,10 +13,10 @@
 
 # usage
  include `prim_wrapper.hpp` in your project and use the type aliases:
- - i8/u8 -> std::i/uin8_t
- - i16/u16 -> std::i/uint16_t
- - i32/u32 -> std::i/uint32_t
- - i64/u64 -> std::i/uint64_t
+ - i/u8 -> std::i/uin8_t
+ - i/u16 -> std::i/uint16_t
+ - i/u32 -> std::i/uint32_t
+ - i/u64 -> std::i/uint64_t
  - f32 -> float
  - f64 -> double
 
@@ -32,6 +34,3 @@
     - **PW from_str(std::string)**: builds a PW from a string
     - **PW::byte_set to_bytes(PW)** - *integrals only*: converts the value's byte structure to a PW::byte_set (std::array)
     - **PW from_bytes(PW::byte_set)** - *integrals only*: builds a PW value from a PW::byte_set (std::array) 
-
-# known limitations
- take the following expression:

@@ -49,6 +49,8 @@ target_precompile_headers(${LOCAL_PROJECT_NAME} PRIVATE
 <intrin.h>
 <stdlib.h>
 <assert.h>
+<type_traits>
+<concepts>
 <cstdint>
 <cstddef>
 <cmath>
@@ -62,10 +64,6 @@ target_precompile_headers(${LOCAL_PROJECT_NAME} PRIVATE
 <algorithm>
 <array>
 <sstream>
-<fmt/core.h>
-<fmt/format.h>
-<fmt/ranges.h>
-<fmt/chrono.h>
 )
 
 target_include_directories(${LOCAL_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -78,9 +76,6 @@ set_target_properties(${LOCAL_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 ####################
 #   Dependencies   #
 ####################
-
-find_package(fmt CONFIG REQUIRED)
-target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE fmt::fmt)
 
 find_package(benchmark REQUIRED)
 target_link_libraries(${LOCAL_PROJECT_NAME} PRIVATE benchmark::benchmark)
