@@ -17,8 +17,8 @@
  - i/u16 -> prim_wrapper\<i/uint16_t>
  - i/u32 -> prim_wrapper\<i/uint32_t>
  - i/u64 -> prim_wrapper\<i/uint64_t>
- - f32 -> prim_wrapper\<float>
- - f64 -> prim_wrapper\<double>
+ - f32 -> float_wrapper\<float>
+ - f64 -> float_wrapper\<double>
 
  note: although implicitly casting from a prim_wrapper object to it's primitive counterpart is not allowed - to avoid ambiguity - implicitly casting between prim_wrapper types is supported.
 
